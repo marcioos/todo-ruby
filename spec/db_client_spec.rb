@@ -12,6 +12,10 @@ def insert_todo_item(id, text)
   )
 end
 
+def get_todo_item(item_id)
+  DbClient.instance.client.get(:todo_items, item_id)
+end
+
 describe 'DB Client' do
 
   it "is a singleton" do
@@ -23,15 +27,15 @@ describe 'DB Client' do
     item_text = 'Brew some coffee'
     item_id = "1"
     insert_todo_item(item_id, item_text)
-    expect(client.get(:todo_items, item_id)["item_text"]).to eq(item_text)
+    expect(get_todo_item(item_id)["item_text"]).to eq(item_text)
   end
 
   it "removes todo items" do
     client = DbClient.instance.client
     item_id = "1"
-    expect(client.get(:todo_items, item_id)).not_to be_empty
+    expect(get_todo_item(item_id)).not_to be_empty
     client.remove(:todo_items, item_id)
-    expect(client.get(:todo_items, item_id)).to be_empty
+    expect(get_todo_item(item_id)).to be_empty
   end
 
   it "retrieves todo items" do
@@ -47,9 +51,10 @@ describe 'DB Client' do
 
   it "updates todo items" do
     client = DbClient.instance.client
-    insert_todo_item("1", "brew coffee")
-    expect(client.get(:todo_items, "1")["item_text"]).to eq("brew coffee")
-    insert_todo_item("1", "drink water")
-    expect(client.get(:todo_items, "1")["item_text"]).to eq("drink water")
+    item_id = "1"
+    insert_todo_item(item_id, "brew coffee")
+    expect(get_todo_item(item_id)["item_text"]).to eq("brew coffee")
+    insert_todo_item(item_id, "drink water")
+    expect(get_todo_item(item_id)["item_text"]).to eq("drink water")
   end
 end
