@@ -1,1 +1,1 @@
-Todo List rest apit (Ruby + Sinatra)
+Todo List REST API (Ruby + Sinatra)
